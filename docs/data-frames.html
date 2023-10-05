@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Data Frames</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./subsetting-and-manipulation.html" rel="next">
+<link href="./data-objects.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<style>
+    .quarto-title-block .quarto-title-banner {
+      background: #012169;
+    }
+    </style>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Data Frames</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title d-none d-lg-block">Data Frames</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction to Statistics and R</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Getting Started</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Basics in R</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./syntax-basics.html" class="sidebar-item-text sidebar-link">Syntax - basics</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./functions-and-packages.html" class="sidebar-item-text sidebar-link">Functions and Packages</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-objects.html" class="sidebar-item-text sidebar-link">Data Objects</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-frames.html" class="sidebar-item-text sidebar-link active">Data Frames</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./subsetting-and-manipulation.html" class="sidebar-item-text sidebar-link">Subsetting and Manipulation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Data Exploration</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./question-explore-analyse.html" class="sidebar-item-text sidebar-link">Question, Explore and Analyse</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sampling-and-distribution.html" class="sidebar-item-text sidebar-link">Sampling and Distribution</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page:</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1. Overview</a></li>
+  <li><a href="#tidy-data-concept" id="toc-tidy-data-concept" class="nav-link" data-scroll-target="#tidy-data-concept">2. Tidy Data Concept</a></li>
+  <li><a href="#data-file-type" id="toc-data-file-type" class="nav-link" data-scroll-target="#data-file-type">3. Data File Type</a></li>
+  <li><a href="#excel-data-setup-data-dictionary" id="toc-excel-data-setup-data-dictionary" class="nav-link" data-scroll-target="#excel-data-setup-data-dictionary">4. Excel, Data Setup, Data Dictionary</a>
+  <ul class="collapse">
+  <li><a href="#untidy-data" id="toc-untidy-data" class="nav-link" data-scroll-target="#untidy-data">4.1 Untidy Data</a></li>
+  <li><a href="#tidy-data" id="toc-tidy-data" class="nav-link" data-scroll-target="#tidy-data">4.2 Tidy Data</a></li>
+  <li><a href="#csv-files" id="toc-csv-files" class="nav-link" data-scroll-target="#csv-files">4.3 CSV Files</a></li>
+  </ul></li>
+  <li><a href="#getting-data-into-r" id="toc-getting-data-into-r" class="nav-link" data-scroll-target="#getting-data-into-r">5. Getting Data into R</a>
+  <ul class="collapse">
+  <li><a href="#working-directory" id="toc-working-directory" class="nav-link" data-scroll-target="#working-directory">5.1 Working Directory</a></li>
+  <li><a href="#read-in-your-first-file" id="toc-read-in-your-first-file" class="nav-link" data-scroll-target="#read-in-your-first-file">5.2 Read in Your First File</a></li>
+  </ul></li>
+  <li><a href="#sec-manipulate" id="toc-sec-manipulate" class="nav-link" data-scroll-target="#sec-manipulate">6. Manipulating Variables in the Data Frame</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">7. Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="overview" class="level1">
+<h1>1. Overview</h1>
+<p><strong>NB:</strong> for this page we assume you have access to Microsoft Excel. However, similar spreadsheet software (like Libre Office Calc) will work fine.</p>
+<blockquote class="blockquote">
+<p>The first step in using R for data analysis is getting your data into <code>R</code>. The first step for getting your data into <code>R</code> is making your data tidy.</p>
+</blockquote>
+<p>The commonest question we have experienced for new users of <code>R</code> who want to perform analysis on their data is how to get data into <code>R</code>. There is good news and bad news. The good news is that <strong>it is exceedingly easy to get data into <code>R</code> for analysis, in almost any format</strong>. The bad news is that <strong>a step most new users find challenging is taking responsibility for their own data</strong>.</p>
+<p>What we mean here is that best practice in data management involves active engagement with your dataset. This includes choosing appropriate variable names, error checking, and documenting information about variables and data collection. We also aim to avoid proliferation of excessive dataset versions, and, worst of all, embedding graphs and data summaries into Excel spreadsheets with data.</p>
+<p><strong>On this page you will find:</strong></p>
+<ul>
+<li><p>Common data file types</p></li>
+<li><p>Excel, data setup, and the Data Dictionary</p></li>
+<li><p>Getting data into R</p></li>
+<li><p>Manipulating variables in the Data Frame</p></li>
+<li><p>Practice exercises</p></li>
+</ul>
+</section>
+<section id="tidy-data-concept" class="level1">
+<h1>2. Tidy Data Concept</h1>
+<p>A concept to streamline data preparation for analysis is ‘Tidy Data’. The basic idea is to format data for analysis in a way that:</p>
+<ul>
+<li><p>Archives data for reproducibility of results</p></li>
+<li><p>Makes the data transparent to colleagues or researchers by documenting a data dictionary.</p></li>
+</ul>
+<p>This page is all about the tidy data concept and a simple recipe for best practice to prepare data for analysis and to get data into R.</p>
+<p>The <a href="https://www.jstatsoft.org/article/view/v059i10">definition of Tidy Data is generally attributed to Wickham (2014)</a>, and is based on the idea that with a few simple rules, data can be archived for complete reproducibility of results. This practice benefits any user because it facilitates collaboration at the same time as documenting both data and analysis methods for value to future use.</p>
+<p>The essentials of Tidy Data are:</p>
+<ul>
+<li><p>Each variable should be in a column</p></li>
+<li><p>Each independent observation should be in a row</p></li>
+<li><p>A Data Dictionary should be associatied with the dataset, such that completely reproducible analysis is possible</p></li>
+</ul>
+</section>
+<section id="data-file-type" class="level1">
+<h1>3. Data File Type</h1>
+<p>The best file type for the majority of people to archive data for analysis is in a plain text <strong>Comma Separated Values (CSV or .csv) file</strong>, or just an <strong>Excel Spreadsheet</strong>. Best practice in contemporary scientific data analysis dictates that proprietary data formats should be avoided, like those produced by SPSS, Genstat, Minitab or other programs.</p>
+<p>The reason for this is that data stored in those formats is not necessarily useful to people who do not have access to the software, and that for archiving purposes, such software file formats tend to change over time. While Excel is a proprietary format, we find that it is is easy to use, (almost completely) ubiquitous, and relatively resilient to backwards compatibility issues. Thus, sticking to CSV or Excel is a rule you should have a very good reason if you choose to break from it.</p>
+<p>We recommend using Excel to store data with the goal (for simple datasets and analyses) of having one table for the actual data, in Tidy Data format, and a second tab consisting of a Data Dictionary where each variable is described in enough detail to completely reproduce any analysis. Generally, no formatting or results should ever be embedded in an Excel spreadsheet that is used to store data.</p>
+</section>
+<section id="excel-data-setup-data-dictionary" class="level1">
+<h1>4. Excel, Data Setup, Data Dictionary</h1>
+<p>For this section, you should download the following files in Excel (.xlsx) format:</p>
+<ul>
+<li><p><a href="Data/5-tidy.xlsx">Tidy Data example Excel file</a></p></li>
+<li><p><a href="Data/5-untidy.xlsx">The exact same information as un-Tidy Data</a></p></li>
+</ul>
+<p><strong>The aphid experiment</strong></p>
+<blockquote class="blockquote">
+<p>You are contacted by someone who wants help with data analysis and they give you some information about their experiment. They are interested in how diet affects the production of an important metabolite in pest aphids. They designed an experiment with a control treatment where aphids were allowed to feed on plain plants, another treatment where their diet was supplemented with one additive, “AD”, and a third treatment where their diet was supplemented with two additives, “AD” and “SA”. Another factor was aphid Genus, where individuals from the genera <em>Brevicoryne</em> and <em>Myzus</em> were tested. Three replicates of each treatment combination were performed:</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>aphid genus [2 levels] × food treatment [3 levels].</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>The metabolite of interest was measured with a spectrometer using three individual aphids from each replicate. The spectrometer peak area (an arbitrary scale) represents the total amount of the metabolite, which was converted to a real scale of metabolite total concentration. Finally, this total concentration was divided by 3 to estimate the concentration of the metabolite in each individual aphid.</p>
+</blockquote>
+<section id="untidy-data" class="level2">
+<h2 class="anchored" data-anchor-id="untidy-data">4.1 Untidy Data</h2>
+<p>Have a look at the file <code>5-untidy.xlsx</code> in Excel.</p>
+<p>The aphid dataset is fairly small and it is readable by humans, but in its current form it is not usable for analysis in <code>R</code> or other statistical software and there are a few ambiguous aspects which we will explore and try to improve.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Images/untidy_data.PNG" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Untidy data as seen in Excel</figcaption><p></p>
+</figure>
+</div>
+<p><strong>Things to consider here:</strong></p>
+<ul>
+<li><p>The file contains embedded figures and summary tables</p></li>
+<li><p>There is empty white space in the file (Row 1 and Column A)</p></li>
+<li><p>The variable names violate several naming conventions (spaces, special characters)</p></li>
+<li><p>Missing data is coded incorrectly (Row 13 was a failed data reading, but records zeros for the actual measurements)</p></li>
+<li><p>Conversion information accessory to the data is present (Row 3)</p></li>
+<li><p>There is no Data Dictionary (i.e.&nbsp;explanation of the variables)</p></li>
+<li><p>The Aphid and Diet treatments are “confounded” in their coding</p></li>
+<li><p>What the heck is the “RT” column (most of the values are identical)</p></li>
+</ul>
+</section>
+<section id="tidy-data" class="level2">
+<h2 class="anchored" data-anchor-id="tidy-data">4.2 Tidy Data</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Images/tidy_data.PNG" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Tidy data as seen in Excel</figcaption><p></p>
+</figure>
+</div>
+<p><strong>Differences to consider here:</strong></p>
+<ul>
+<li><p>The embedded figures have been removed</p></li>
+<li><p>The white space rows and columns have been removed</p></li>
+<li><p>The variable names have been edited but still are equally informative</p></li>
+<li><p>Missing data is coded correctly with “NA”</p></li>
+<li><p>The conversion info has been removed and placed in the Data Dictionary</p></li>
+<li><p>A complete Data Dictionary on a new tab (“dictionary”) was added, explaining each variable</p></li>
+<li><p>The aphid and food treatment variables were made separate</p></li>
+</ul>
+<p>Also note the ‘dictionary’ tab in the tidy data file - seen below. Notice how there is a row for each variable with the name of the variable and an explanation for each variable.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Images/data_dictionary.PNG" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Data dictionary, as seen in Excel</figcaption><p></p>
+</figure>
+</div>
+</section>
+<section id="csv-files" class="level2">
+<h2 class="anchored" data-anchor-id="csv-files">4.3 CSV Files</h2>
+<p>Once your data is tidy, it is very easy to read in Excel data files, or they can be exported into a text file format like CSV (comma separated values) to read straight into <code>R</code> or other programs.</p>
+<p>Have a look at the <a href="Data/5-tidy.csv">Tidy Data dataset in .csv file format</a>.</p>
+<p>Open it with a plain text editor (e.g.&nbsp;Notepad in Windows, or similar). You will notice that each column entry is separated from others with a comma <code>,</code>, hence the name Comma Separated Values!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Images/tidy_csv.PNG" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Tidy data in CSV format</figcaption><p></p>
+</figure>
+</div>
+</section>
+</section>
+<section id="getting-data-into-r" class="level1">
+<h1>5. Getting Data into R</h1>
+<p>We still need to actually “read data into <code>R</code>” from external files. There are a very large number of ways to do this and most people eventually find their own workflow. We think it is best for most people to use Excel or CSV files in Tidy Data format.</p>
+<p>The basics of reading external files from a script is to to use the <code>read.xlsx()</code> function in the <code>{openxlsx}</code> package (you will probably need to install this with the <code>install.packages()</code> function), or else to use <code>read.csv()</code> that comes standard in base <code>R</code>. We will briefly try both.</p>
+<p>Before we do anything, we are going to set the ‘working directory’ or, more simply, where R considers your data files to be and where any outputs will be saved.</p>
+<section id="working-directory" class="level2">
+<h2 class="anchored" data-anchor-id="working-directory">5.1 Working Directory</h2>
+<p>There are several viable ways to set your working directory in R, e.g.&nbsp;via the Session menu:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Images/working_directory.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Setting the working directory via the Session menu</figcaption><p></p>
+</figure>
+</div>
+<p>However, the best way to do this this is to set your working directory using code with the <code>setwd()</code> function. Here we show a workflow for Windows, which is similar on other computer systems. <strong>We consider the step of setting a working directory essential for best practice.</strong></p>
+<p>If you are unfamiliar with how to obtain the path to your working directory, open windows explorer, navigate to the folder you wish to save your script, data files and other inputs and outputs. You can think of this folder as one that contains all related files for e.g.&nbsp;a data analysis project, or perhaps this introductory material!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Images/file_path.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Folder view, with cursor indicating file path for an example working directory</figcaption><p></p>
+</figure>
+</div>
+<p>Note that the folder “view” is set to “Details”, and also notice that the folder options are set to “Show file extensions”. We recommend setting your own settings like this (if using Windows Explorer).</p>
+<p>The pointer is indicated in the red circle, marked in the picture above. Left click the area to the right of the folder text once (where the pointer is in the picture above) and you should see something similar to the figure below, where the folder path is displayed and the text is automatically selected.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Images/wd_selected.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Example of a selected file path</figcaption><p></p>
+</figure>
+</div>
+<p>Assuming you have opened the File Explorer in your working directory or navigated there, the selected <code>PATH</code> is the working directory path which you can copy (<code>Ctrl + c</code> in Windows). In your script, you can now use <code>getwd()</code> to get and print your working directory path, and <code>setwd()</code>, which takes a single character string of the path for your working directory for the argument <code>dir</code> , to set it.</p>
+<blockquote class="blockquote">
+<p>R file paths use the forward slash symbol “/” to separate file names. A very important step for Windows users when setting the working directory in R is to change the Windows default “” for forward slashes, or remember to change the backslashes once in R.</p>
+</blockquote>
+</section>
+<section id="read-in-your-first-file" class="level2">
+<h2 class="anchored" data-anchor-id="read-in-your-first-file">5.2 Read in Your First File</h2>
+<p><strong>NOTE: For this section, use the ‘Tidy’ data file from Section 4.</strong></p>
+<p>Then try this in your example script:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>() <span class="co"># Prints working directory in Console</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"D:/Dropbox/git-rstats-bootcamp/website/data"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># NB the quotes</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># NB the use of "/"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># NB this is AN EXAMPLE directory - change the PATH to YOUR directory :)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>() <span class="co"># Check that change worked</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Read in Excel data file</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(openxlsx, <span class="at">dep =</span> T) <span class="co"># Run if needed</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openxlsx) <span class="co"># Load package needed to read Excel files</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure the data file "5-tidy.xlsx" is in your working directory</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read.xlsx</span>(<span class="st">"5-tidy.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>All being well, you should see the following data object in your Global Environement. Note the small blue button (circled below in red) you can press to espand the view of the variables in your data frame.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Images/data_environment.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Data summary in your Global Environment</figcaption><p></p>
+</figure>
+</div>
+<p>Note that the same procedure works with Comma Separated Values data files, and other kinds of files that you want to read into R, except that the R function used will be specific to the file type. E.g., <code>read.csv()</code> for CSV files, <code>read.delim</code> for TAB delimited files, or <code>read.table()</code> as a generic function to tailor to many types of plain text data files (there are many others, but this is enough for now).</p>
+</section>
+</section>
+<section id="sec-manipulate" class="level1">
+<h1>6. Manipulating Variables in the Data Frame</h1>
+<p>Now that there is a data frame in your working environment, we can start working with the variables. This is a good time to think about the “<code>R</code> Space” metaphor. You are floating in <code>R</code> Space and you can see a data frame called <code>my_data</code>. You cannot see inside the container, so we will look at methods of accessing the data inside by name…</p>
+<p><strong>Try the following in your example script:</strong></p>
+<ol type="1">
+<li><p><code>class()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(my_data) <span class="co"># data.frame, a generic class for holding data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p><code>names()</code> - The <code>names()</code> function returns the name of attributes in R objects. When used on a data frame it returns the names of the variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(my_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>$ operator - The <code>$</code> operator allows us to access variable names inside <code>R</code> objects. Use it like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>conc.ind <span class="co"># Error because the variable conc.ind is INSIDE my_data</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>my_data<span class="sc">$</span>conc.ind</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>str() - The <code>str()</code> function returns the STRUCTURE of a data frame. This includes variable names, classes, and the first few values</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(my_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The output is similar to the graphical Global Environment view in RStudio. Note the <code>conc.ind</code> variable is classed as numeric</p>
+<p>Note the <code>treatment</code> variable is classed as character (not a factor)</p></li>
+<li><p>[ , ] the index operator - The index operator allows us to access specified rows and columns in data frames (this works exactly the same in matrices and other indexed objects).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>my_data<span class="sc">$</span>conc.tot <span class="co"># The conc.tot variable with $</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>my_data<span class="sc">$</span>conc.tot[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>] <span class="co"># each variable is a vector - 1st to 6th values</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(dim)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(my_data) <span class="co"># my_data has 18 rows, 6 columns</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>my_data[ , ] <span class="co"># Leaving blanks means return all rows and columns</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(my_data) <span class="co"># Note conc.tot is the 6th variable</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(my_data)[<span class="dv">6</span>] <span class="co"># Returns the name of the 6th variable</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>my_data[ , <span class="dv">6</span>] <span class="co"># Returns all rows of the 6th variable in my_data</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># We can explicitly specify all rows (there are 18 remember)</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>my_data[<span class="dv">1</span><span class="sc">:</span><span class="dv">18</span> , <span class="dv">6</span>] <span class="co"># ALSO returns all rows of the 6th variable in my_data</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co"># We can specify the variable names with a character</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>my_data[ , <span class="st">"conc.tot"</span>]</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>my_data[ , <span class="st">"conc.ind"</span>]</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify more than 1 by name with c() in the column slot of [ , ]</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>my_data[ , <span class="fu">c</span>(<span class="st">"conc.tot"</span>, <span class="st">"conc.ind"</span>)] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>attach() - The <code>attach()</code> function makes variable names available for a data frame in <code>R</code> space</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>conc.ind <span class="co"># Error</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">attach</span>(my_data)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>conc.ind <span class="co"># Now that my_data is "attached", R can find variables inside</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(detach) <span class="co"># Undo attach()</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">detach</span>(my_data)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>conc.ind </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+</ol>
+</section>
+<section id="exercises" class="level1">
+<h1>7. Exercises</h1>
+<p>The following data are from a small experiment measuring antenna length in butterflies manipulating diet in both sexes:</p>
+<p><a href="Data/5-butterfly.xlsx">Butterfly data in xlsx format</a></p>
+<ol type="1">
+<li><p>Download the data file above and place it in a working directory. Set your working directory. Read in the data file and place it in a data frame object named <code>data1.</code> After examining the data, use <code>mean()</code> to calculate the mean of the variable <code>length</code> and report the results in a comment to two decimal points accuracy. Show your <code>R</code> code.</p></li>
+<li><p>Show the code to convert the <code>diet</code> variable to an ordinal factor with the order “control” &gt; “enhanced”, and the <code>sex</code> variable to a plain categorical factor.</p></li>
+<li><p>Show code for two different variations of using only the <code>[ , ]</code> operator with your data frame to show the following output:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>       diet length</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dv">8</span>   control      <span class="dv">6</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="dv">9</span>   control      <span class="dv">7</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span>  control      <span class="dv">6</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="dv">11</span> enhanced      <span class="dv">8</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="dv">12</span> enhanced      <span class="dv">7</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="dv">13</span> enhanced      <span class="dv">9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>Show code to read in a comma separated values data file that does not have a header (first row containing variable names).</p></li>
+<li><p>Describe in your own words what the <code>attach()</code> function does</p></li>
+<li><p>Write a plausible practice question involving any aspect of manipulation of a data frame</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./data-objects.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Data Objects</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./subsetting-and-manipulation.html" class="pagination-link">
+        <span class="nav-page-text">Subsetting and Manipulation</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
